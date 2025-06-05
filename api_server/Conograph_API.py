@@ -6,7 +6,7 @@ from dataIO import read_cntl_inp_xml
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 work = os.path.join (current_dir, 'work')
-exePath = os.path.join (work, 'PeakSearch.cpp')
+exePath = os.path.join (work, 'PeakSearch')
 assert os.path.exists (work)
 assert os.path.exists (exePath)
 
