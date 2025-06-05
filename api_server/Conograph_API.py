@@ -12,7 +12,7 @@ assert os.path.exists (exePath)
 
 app = Flask(__name__)
 
-@app.route('/parse_cntl', methods=['POST'])
+@app.route('/parse_cntl', methods = ['POST'])
 def parse_cntl_file():
     file = request.files['file']
     assert file.name == 'cnti.imp.xml'
@@ -22,7 +22,7 @@ def parse_cntl_file():
     ans = [param_file, hist_file]
     return jsonify ({'required_files' : ans})
 
-@app.route("/run_cpp", methods=["POST"])
+@app.route("/run_cpp", methods = ["POST"])
 def run_cpp_with_cntl():
     #os.makedirs("work", exist_ok=True)
 
@@ -40,6 +40,14 @@ def run_cpp_with_cntl():
         return send_file(out_path, as_attachment = True)
     else:
         return jsonify({"error": "出力ファイルがありません"}), 500
-    
+
+@app.route("/", methods=["GET"])
+def root():
+    routes = []
+    for rule in app.url_map.iter_rules():
+        routes.append(f"{rule.methods} {rule.rule}")
+    return "<br>".join(routes)
+
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port = 8000)
