@@ -4,7 +4,7 @@ import subprocess
 import os
 from dataIO import read_cntl_inp_xml
 
-current_dir = os.getcwd()
+current_dir = os.path.dirname(os.path.abspath(__file__))
 work = os.path.join (current_dir, 'work')
 exePath = os.path.join (work, 'PeakSearch.cpp')
 assert os.path.exists (work)
