@@ -14,13 +14,20 @@ app = Flask(__name__)
 
 @app.route('/parse_cntl', methods = ['POST'])
 def parse_cntl_file():
-    file = request.files['file']
-    assert file.name == 'cntl.imp.xml',  f"ファイル名が不正です: {file.filename}
-    path = os.path.join (work, file.name)
-    file.save (path)
-    param_file, hist_file, _ = read_cntl_inp_xml (file)
-    ans = [param_file, hist_file]
-    return jsonify ({'required_files' : ans})
+    try:
+        #assert 'file' in request.files
+        file = request.files['file']
+        #assert file.name == 'cntl.imp.xml',  f"ファイル名が不正です: {file.filename}"
+        path = os.path.join (work, file.name)
+        file.save (path)
+        #assert os.path.exists (path)
+        param_file, hist_file, _ = read_cntl_inp_xml (path)
+        ans = [param_file, hist_file]
+        return jsonify ({'required_files' : ans})
+
+    except Exception as e:
+        # ここで例外メッセージを明示的に JSON として返す
+        return jsonify({"error": f"[parse_cntl_file] エラー: {str(e)}"}), 500
 
 @app.route("/run_cpp", methods = ["POST"])
 def run_cpp_with_cntl():
@@ -50,4 +57,4 @@ def root():
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port = 8000)
+    app.run(host="0.0.0.0", port = 8000, debug = True)
