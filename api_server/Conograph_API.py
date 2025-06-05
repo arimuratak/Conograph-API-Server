@@ -34,7 +34,7 @@ def run_cpp_with_cntl():
         path = os.path.join(work, f.filename)
         f.save(path)
 
-    result = subprocess.run(['./PeakSearch.cpp'],
+    result = subprocess.run(['./work/PeakSearch.cpp'],
                     capture_output=True, text=True)
     cntlPath = os.path.join (work, 'cntl.imp.xml')
     _,_,out_path = read_cntl_inp_xml (cntlPath)
