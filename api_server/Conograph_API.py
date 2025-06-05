@@ -15,7 +15,7 @@ app = Flask(__name__)
 @app.route('/parse_cntl', methods = ['POST'])
 def parse_cntl_file():
     file = request.files['file']
-    assert file.name == 'cnti.imp.xml'
+    assert file.name == 'cntl.imp.xml'
     path = os.path.join (work, file.name)
     file.save (path)
     param_file, hist_file, _ = read_cntl_inp_xml (file)
