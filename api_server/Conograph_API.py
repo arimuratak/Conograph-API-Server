@@ -4,8 +4,11 @@ import subprocess
 import os
 from dataIO import read_cntl_inp_xml
 
-assert os.path.exists ('work')
-assert os.path.exists ('work/PeakSearch.cpp')
+current_dir = os.getcwd()
+work = os.path.join (current_dir, 'work')
+exePath = os.path.join (work, 'PeakSearch.cpp')
+assert os.path.exists (work)
+assert os.path.exists (exePath)
 
 app = Flask(__name__)
 
@@ -13,7 +16,7 @@ app = Flask(__name__)
 def parse_cntl_file():
     file = request.files['file']
     assert file.name == 'cnti.imp.xml'
-    path = os.path.join ('work', file.name)
+    path = os.path.join (work, file.name)
     file.save (path)
     param_file, hist_file, _ = read_cntl_inp_xml (file)
     ans = [param_file, hist_file]
@@ -25,14 +28,14 @@ def run_cpp_with_cntl():
 
     for key in request.files:
         f = request.files[key]
-        path = os.path.join("work", f.filename)
+        path = os.path.join(work, f.filename)
         f.save(path)
 
     result = subprocess.run(['./PeakSearch.cpp'],
                     capture_output=True, text=True)
-
-    _,_,out_path = read_cntl_inp_xml ('work/cntl.imp.xml')
-    out_path = os.path.join ('work', out_path)
+    cntlPath = os.path.join (work, 'cntl.imp.xml')
+    _,_,out_path = read_cntl_inp_xml (cntlPath)
+    out_path = os.path.join (work, out_path)
     if os.path.exists (out_path):
         return send_file(out_path, as_attachment = True)
     else:
