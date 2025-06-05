@@ -1,0 +1,42 @@
+# api_server.py
+from flask import Flask, request, send_file, jsonify
+import subprocess
+import os
+from dataIO import read_cntl_inp_xml
+
+assert os.path.exists ('work')
+assert os.path.exists ('work/PeakSearch.cpp')
+
+app = Flask(__name__)
+
+@app.route('/parse_cntl', methods=['POST'])
+def parse_cntl_file():
+    file = request.files['file']
+    assert file.name == 'cnti.imp.xml'
+    path = os.path.join ('work', file.name)
+    file.save (path)
+    param_file, hist_file, _ = read_cntl_inp_xml (file)
+    ans = [param_file, hist_file]
+    return jsonify ({'required_files' : ans})
+
+@app.route("/run_cpp", methods=["POST"])
+def run_cpp_with_cntl():
+    #os.makedirs("work", exist_ok=True)
+
+    for key in request.files:
+        f = request.files[key]
+        path = os.path.join("work", f.filename)
+        f.save(path)
+
+    result = subprocess.run(['./PeakSearch.cpp'],
+                    capture_output=True, text=True)
+
+    _,_,out_path = read_cntl_inp_xml ('work/cntl.imp.xml')
+    out_path = os.path.join ('work', out_path)
+    if os.path.exists (out_path):
+        return send_file(out_path, as_attachment = True)
+    else:
+        return jsonify({"error": "出力ファイルがありません"}), 500
+    
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port = 8000)
