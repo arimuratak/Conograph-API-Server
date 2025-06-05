@@ -16,7 +16,8 @@ app = Flask(__name__)
 def parse_cntl_file():
     assert 'file' in request.files
     file = request.files['file']
-    assert file.name == 'cntl.imp.xml',  f"ファイル名が不正です: {file.filename}"
+    assert isinstance (file.name, str)
+    #assert file.name == 'cntl.imp.xml',  f"ファイル名が不正です: {file.filename}"
     path = os.path.join (work, file.name)
     file.save (path)
     assert os.path.exists (path)
