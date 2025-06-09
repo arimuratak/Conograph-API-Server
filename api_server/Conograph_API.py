@@ -41,7 +41,7 @@ def run_cpp_with_cntl():
     _,_,out_path = read_cntl_inp_xml (cntlPath)
     out_path = os.path.join (work, out_path)
     if os.path.exists (out_path):
-        return send_file(out_path, as_attachment = True)
+        return send_file(out_path, as_attachment = True), 200
     else:
         return jsonify({"error": "出力ファイルがありません"}), 500
 
