@@ -3,6 +3,7 @@ import shutil
 from flask import Flask, request, send_file, jsonify
 import subprocess
 import os
+import stat
 from dataIO import read_cntl_inp_xml
 
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -44,6 +45,8 @@ def run_cpp_with_cntl():
         path = os.path.join (CURRENT_DIR, path)
         f.save(path)
     
+    if not os.access (PATH_exe, os.X_OK):
+       os.chmod(PATH_exe, os.stat (PATH_exe).st_mode | stat.S_IEXEC)
     result = subprocess.run([PATH_exe],
                     capture_output=True, text=True)
     #result = subprocess.run('PeakSearch.exe')
