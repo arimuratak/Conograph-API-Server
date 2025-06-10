@@ -6,6 +6,7 @@ import os
 from dataIO import read_cntl_inp_xml
 
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
+os.chdir(CURRENT_DIR)
 PATH_cntl = os.path.join (CURRENT_DIR, 'cntl.inp.xml')
 PATH_param, PATH_hist, PATH_out =  read_cntl_inp_xml (PATH_cntl)
 FOLDER_out = os.path.dirname (PATH_out)
