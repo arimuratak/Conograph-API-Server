@@ -5,7 +5,7 @@ WORKDIR /app
 # api_server フォルダをまとめてコピー
 COPY ./api_server ./api_server
 
-RUN chmod +x ./api_server/work/PeakSearch
+RUN chmod +x ./api_server/PeakSearch
 COPY requirements.txt .
 
 RUN pip install -r requirements.txt
