@@ -28,7 +28,8 @@ def parse_cntl_file():
 
 def reset_workspace (workSpace):
     for fname in os.listdir (workSpace):
-        if 'PeakSearch.exe' in fname: continue
+        if 'PeakSearch' in fname: continue
+        #if 'PeakSearch.exe' in fname: continue
 
         path = os.path.join (workSpace, fname)
         
