@@ -56,11 +56,11 @@ def run_cpp_with_cntl():
         os.makedirs (out_folder, exist_ok=True)
 
     #paramPath, histPath = paths
-    os.chdir (work)
-    result = subprocess.run(['./PeakSearch'],
+    #os.chdir (work)
+    result = subprocess.run([exePath],
                     capture_output=True, text=True)
     #result = subprocess.run('PeakSearch.exe')
-    os.chdir (current_dir)
+    #os.chdir (current_dir)
     
 
     if os.path.exists (out_path):
