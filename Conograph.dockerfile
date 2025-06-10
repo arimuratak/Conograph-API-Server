@@ -1,22 +1,22 @@
 FROM python:3.10-slim
 
-WORKDIR /app/api_server
+# WORKDIRはプロジェクトルート（ルートから見てapi_serverがある前提）
+WORKDIR /app
 
-# 👇 api_server配下のファイル・フォルダを直接コピー（階層崩さない）
-COPY api_server/ ./
+# ✅ ここで api_server 配下のファイルを「そのまま」コピー
+COPY api_server/ ./api_server
+COPY requirements.txt .
 
-# 👇 requirements.txt は1つ上に置く前提
-COPY requirements.txt ../requirements.txt
+# ✅ 実行ファイルのパス修正（api_server直下）
+RUN chmod +x ./api_server/PeakSearch
 
-# 👇 実行ファイルに権限付与（workは既に廃止）
-RUN chmod +x ./PeakSearch
-
-RUN pip install -r ../requirements.txt
+RUN pip install -r requirements.txt
 
 ENV PORT=8000
 
-# 👇 実行は現在のWORKDIRから直接指定
-CMD ["python", "Conograph_API.py"]
+# ✅ CMDでは明示的にパス指定する（WORKDIRからの相対）
+CMD ["python", "api_server/Conograph_API.py"]
+
 
 
 
