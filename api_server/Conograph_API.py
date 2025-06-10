@@ -42,10 +42,7 @@ def run_cpp_with_cntl():
         suffix = fname.split('.')[-1]
         path = pathDict[suffix]
         path = os.path.join (CURRENT_DIR, path)
-        #paths.append (path)
         f.save(path)
-
-    #paramPath, histPath = paths
     
     result = subprocess.run([PATH_exe],
                     capture_output=True, text=True)
@@ -66,4 +63,4 @@ def root():
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port = 8000, debug = True)
+    app.run(host="0.0.0.0", port = 8000, debug = False)
