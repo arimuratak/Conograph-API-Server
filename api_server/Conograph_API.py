@@ -1,5 +1,3 @@
-# api_server.py
-import shutil
 from flask import Flask, request, send_file, jsonify
 import subprocess
 import os
@@ -12,29 +10,18 @@ PATH_cntl = os.path.join (CURRENT_DIR, 'cntl.inp.xml')
 PATH_param, PATH_hist, PATH_out =  read_cntl_inp_xml (PATH_cntl)
 FOLDER_out = os.path.dirname (PATH_out)
 if FOLDER_out is not None: os.makedirs (FOLDER_out, exist_ok = True)
-#work = os.path.join (current_dir, 'work')
 PATH_exe = os.path.join (CURRENT_DIR, 'PeakSearch')
-#assert os.path.exists (work)
-#assert os.path.exists (exePath)
+PATH_log = os.path.join (CURRENT_DIR, 'LOG_PEAKSEARCH.txt')
 
 app = Flask(__name__)
 
-#@app.route('/parse_cntl', methods = ['POST'])
-#def parse_cntl_file():
-#    #assert 'file' in request.files
-#    file = request.files['file']
-#    #assert isinstance (file.name, str)
-#    path = os.path.join (work, file.name)
-#    file.save (path)
-    #assert os.path.exists (path)
-#    param_file, hist_file, _ = read_cntl_inp_xml (path)
-#    ans = [param_file, hist_file]
-#    return jsonify ({'required_files' : ans})
-
 @app.route("/run_cpp", methods = ["POST"])
 def run_cpp_with_cntl():
-    #os.makedirs("work", exist_ok=True)
-    #paths = []
+    if os.path.exists (PATH_param): os.remove (PATH_param)
+    if os.path.exists (PATH_hist): os.remove (PATH_hist)
+    if os.path.exists (PATH_out): os.remove (PATH_out)
+    if os.path.exists (PATH_log): os.remove (PATH_log)
+
     pathDict = {'xml' : PATH_param, 'dat' : PATH_hist,
                 'histogramIgor' : PATH_hist}
     for key in request.files:
@@ -51,11 +38,17 @@ def run_cpp_with_cntl():
                     capture_output=True, text=True)
     #result = subprocess.run('PeakSearch.exe')
     
-
     if os.path.exists (PATH_out):
         return send_file(PATH_out, as_attachment = True), 200
     else:
         return jsonify({"error": "出力ファイルがありません"}), 500
+
+@app.route ('/log_file', methods = ['POST'])
+def log_file ():
+    if os.path.exists (PATH_log):
+        return send_file (PATH_log, as_attachment = True), 200
+    else:
+        return jsonify ({'error' : '送信ファイルがありません'}), 500
 
 @app.route("/", methods=["GET"])
 def root():
